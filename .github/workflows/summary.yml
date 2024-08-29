@@ -40,6 +40,7 @@ jobs:
           jf npm-config --repo-resolve=robi-npm --repo-deploy=robi-npm
           jf npm i
           jf npm publish
+
       - name: Docker build
         run: |
           cd docker-oci-examples/fat-manifest-example
@@ -59,3 +60,8 @@ jobs:
         run: |
           jf rt bce
           jf rt bp
+        
+
+      - name: Scan build info
+        run: |
+          jf bs --fail=false --vuln
