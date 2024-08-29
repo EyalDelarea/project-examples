@@ -17,10 +17,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Setup JFrog CLI
-        uses: eyaldelarea/setup-jfrog-cli@improve_summary_ui
+        uses: jfrog/setup-jfrog-cli@v4
         env:
-          JF_URL: https://ecosysjfrog.jfrog.io/
-          JF_ACCESS_TOKEN: ${{ secrets.JF_ECO_ACCESS_TOKEN }}
+          JF_URL: ${{ vars.JF_URL }}
+          JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
           JFROG_CLI_LOG_LEVEL: DEBUG
         with:
           download-repository: generic-local-eyal
@@ -34,13 +34,11 @@ jobs:
         with:
           node-version: "16"
 
-          # jf npm-config --repo-resolve=npm-eyalde --repo-deploy=npm-eyalde
       - name: Npm build
         run: |
           cd npm-example
-
           jf npm-config --repo-resolve=robi-npm --repo-deploy=robi-npm
-          jf ca
+          jf npm i 
 
       - name: Docker build
         run: |
