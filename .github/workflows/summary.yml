@@ -17,7 +17,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Setup JFrog CLI
-        uses: jfrog/setup-jfrog-cli@v4
+        uses: eyaldelarea/setup-jfrog-cli@improve_summary_ui
         env:
           JF_URL: https://ecosysjfrog.jfrog.io/
           JF_ACCESS_TOKEN: ${{ secrets.JF_ECO_ACCESS_TOKEN }}
