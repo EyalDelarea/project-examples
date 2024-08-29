@@ -19,8 +19,8 @@ jobs:
       - name: Setup JFrog CLI
         uses: jfrog/setup-jfrog-cli@v4
         env:
-          JF_URL: ${{ vars.JF_URL }}
-          JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
+          JF_URL: https://ecosysjfrog.jfrog.io/
+          JF_ACCESS_TOKEN: ${{ secrets.JF_ECO_ACCESS_TOKEN }}
           JFROG_CLI_LOG_LEVEL: DEBUG
         with:
           download-repository: generic-local-eyal
@@ -43,7 +43,7 @@ jobs:
       - name: Docker build
         run: |
           cd docker-oci-examples/fat-manifest-example
-          echo ${{ secrets.JF_PASSWORD }} | docker login ${{ vars.JF_URL }} -u ${{ secrets.JF_USER }} --password-stdin
+          echo ${{ secrets.JF_PASSWORD }} | docker login https://ecosysjfrog.jfrog.io/ -u ${{ secrets.JF_USER }} --password-stdin
           docker buildx install
           docker buildx create --use --name mybuilder --driver docker-container
           docker buildx build --platform=linux/amd64,linux/arm64,linux/arm/v7 --tag=ecosysjfrog.jfrog.io/docker-local/multi-lini:2 -f=Dockerfile.Fatmanifest --metadata-file=build-metadata --push .
