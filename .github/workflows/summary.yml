@@ -13,7 +13,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        os: [ ubuntu-latest ]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Setup JFrog CLI
@@ -27,18 +27,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install npm
-        uses: actions/setup-node@v4
-        with:
-          node-version: "16"
-
-      - name: Npm build
+      - name: Docker build
         run: |
-          cd npm-example
-          jf npm-config --repo-resolve=robi-npm --repo-deploy=robi-npm
-          jf npm i
-          jf npm publish
-
+          cd docker-oci-examples/fat-manifest-example
+          echo ${{ secrets.JF_PASSWORD }} | docker login https://ecosysjfrog.jfrog.io/ -u ${{ secrets.JF_USER }} --password-stdin
+          docker buildx install
+          docker buildx create --use --name mybuilder --driver docker-container
+          docker buildx build --platform=linux/amd64,linux/arm64,linux/arm/v7 --tag=ecosysjfrog.jfrog.io/docker-local/multi-lini:2 -f=Dockerfile.Fatmanifest --metadata-file=build-metadata --push .
+          jf rt build-docker-create docker-local --image-file build-metadata
+          docker buildx uninstall
+      - name: Docker Scan
+        run: |
+          jf docker pull ecosysjfrog.jfrog.io/docker-local/multi-lini:2
+          jf docker scan --vuln=true ecosysjfrog.jfrog.io/docker-local/multi-lini:2
       - name: Publish build info
         run: |
           jf rt bce
