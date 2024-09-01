@@ -7,7 +7,7 @@ permissions:
 
 env:
   JFROG_CLI_LOG_LEVEL: DEBUG
-  DOCKER_REPO: docker-local
+  DOCKER_REPO: eyalde-docker-local
   DOCKER_TAG: multi-lini:2
 
 jobs:
