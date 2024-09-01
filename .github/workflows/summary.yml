@@ -18,7 +18,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Setup JFrog CLI
-        uses: jfrog/setup-jfrog-cli@v4
+        uses: eyaldelarea/setup-jfrog-cli@fix_header_image
         env:
           JF_URL: ${{ vars.JF_URL }}
           JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
@@ -54,6 +54,6 @@ jobs:
           jf rt bce
           jf rt bp
 
-#      - name: Scan build info
-#        run: |
-#          jf bs --fail=false --vuln
+      - name: Scan build info
+        run: |
+          jf bs --fail=false --vuln
