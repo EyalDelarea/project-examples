@@ -43,11 +43,17 @@ jobs:
           jf docker pull soleng.jfrog.io/${{ env.DOCKER_REPO }}/${{ env.DOCKER_TAG }}
           jf docker scan --vuln=true soleng.jfrog.io/${{ env.DOCKER_REPO }}/${{ env.DOCKER_TAG }}
 
+      - name: Npm build
+        run: |
+          cd npm-example
+          jf npm-config --repo-resolve=npm-eyalde --repo-deploy=npm-eyalde
+          jf npm install
+
       - name: Publish build info
         run: |
           jf rt bce
           jf rt bp
 
-      - name: Scan build info
-        run: |
-          jf bs --fail=false --vuln
+#      - name: Scan build info
+#        run: |
+#          jf bs --fail=false --vuln
