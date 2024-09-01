@@ -5,9 +5,10 @@ permissions:
   id-token: write
   contents: read
 
-
 env:
   JFROG_CLI_LOG_LEVEL: DEBUG
+  DOCKER_REPO: docker-local
+  DOCKER_TAG: multi-lini:2
 
 jobs:
   build:
@@ -19,8 +20,8 @@ jobs:
       - name: Setup JFrog CLI
         uses: jfrog/setup-jfrog-cli@v4
         env:
-          JF_URL: https://ecosysjfrog.jfrog.io/
-          JF_ACCESS_TOKEN: ${{ secrets.JF_ECO_ACCESS_TOKEN }}
+          JF_URL: ${{ vars.JF_URL }}
+          JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
           JFROG_CLI_LOG_LEVEL: DEBUG
           JF_PROJECT: jobsummary
 
@@ -30,20 +31,23 @@ jobs:
       - name: Docker build
         run: |
           cd docker-oci-examples/fat-manifest-example
-          echo ${{ secrets.JF_PASSWORD }} | docker login https://ecosysjfrog.jfrog.io/ -u ${{ secrets.JF_USER }} --password-stdin
+          echo ${{ secrets.JF_PASSWORD }} | docker login ${{ vars.JF_URL }} -u ${{ secrets.JF_USER }} --password-stdin
           docker buildx install
           docker buildx create --use --name mybuilder --driver docker-container
-          docker buildx build --platform=linux/amd64,linux/arm64,linux/arm/v7 --tag=ecosysjfrog.jfrog.io/docker-local/multi-lini:2 -f=Dockerfile.Fatmanifest --metadata-file=build-metadata --push .
-          jf rt build-docker-create docker-local --image-file build-metadata
+          docker buildx build --platform=linux/amd64,linux/arm64,linux/arm/v7 --tag=${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.DOCKER_TAG }} -f=Dockerfile.Fatmanifest --metadata-file=build-metadata --push .
+          jf rt build-docker-create ${{ env.DOCKER_REPO }} --image-file build-metadata
           docker buildx uninstall
+
       - name: Docker Scan
         run: |
-          jf docker pull ecosysjfrog.jfrog.io/docker-local/multi-lini:2
-          jf docker scan --vuln=true ecosysjfrog.jfrog.io/docker-local/multi-lini:2
+          jf docker pull ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.DOCKER_TAG }}
+          jf docker scan --vuln=true ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.DOCKER_TAG }}
+
       - name: Publish build info
         run: |
           jf rt bce
           jf rt bp
+
       - name: Scan build info
         run: |
           jf bs --fail=false --vuln
