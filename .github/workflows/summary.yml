@@ -30,10 +30,46 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Python3
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11.5"
+
+      - name: Setup Pipenv
+        run: python -m pip install --upgrade pip setuptools wheel
+
       - name: Install npm
         uses: actions/setup-node@v4
         with:
           node-version: "16"
+
+      - name: Package managers versions
+        run: |
+          jf -v
+          mvn -v
+          python --version
+          pip --version
+          wheel version
+          pip show setuptools
+          echo $VIRTUAL_ENV
+          node -v
+          npm -v
+          go version
+
+
+      - name: Maven build
+        run: |
+          cd maven-examples/maven-example
+          jf mvnc --repo-deploy-releases=libs-release --repo-deploy-snapshots=libs-snapshot --repo-resolve-releases=libs-release --repo-resolve-snapshots=libs-snapshot
+          jf mvn clean install -B
+
+      - name: Pip build
+        run: |
+          cd python-example/pip-example/
+          jf pip-config --repo-resolve=robi-pypi-virtual
+          jf pip install . --module=jfrog-python-example
+          python setup.py sdist bdist_wheel
+          jf rt u dist/ robi-pypi-virtual/ --module=jfrog-python-example
 
       - name: Npm build
         run: |
@@ -41,19 +77,19 @@ jobs:
           jf npm-config --repo-resolve=robi-npm --repo-deploy=robi-npm
           jf npm i
           jf npm publish
-      - name: Docker build
+
+      - name: Go build
         run: |
-          cd docker-oci-examples/fat-manifest-example
-          echo ${{ secrets.JF_PASSWORD }} | docker login https://ecosysjfrog.jfrog.io/ -u ${{ secrets.JF_USER }} --password-stdin
-          docker buildx install
-          docker buildx create --use --name mybuilder --driver docker-container
-          docker buildx build --platform=linux/amd64,linux/arm64,linux/arm/v7 --tag=ecosysjfrog.jfrog.io/docker-local/multi-lini:2 -f=Dockerfile.Fatmanifest --metadata-file=build-metadata --push .
-          jf rt build-docker-create docker-local --image-file build-metadata
-          docker buildx uninstall
-      - name: Docker Scan
+          cd golang-example
+          jf go-config --repo-resolve=robi-go --repo-deploy=robi-go
+          jf go build
+          jf go-publish v1.0.0
+
+      - name: Generic build
         run: |
-          jf docker pull ecosysjfrog.jfrog.io/docker-local/multi-lini:2
-          jf docker scan --vuln=true ecosysjfrog.jfrog.io/docker-local/multi-lini:2
+          cd bash-example
+          jf rt u ./deploy-file.sh generic-local-robi/ --module=generic-module
+
       - name: Publish build info
         run: |
           jf rt bce
