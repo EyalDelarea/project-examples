@@ -34,14 +34,14 @@ jobs:
           echo ${{ secrets.JF_PASSWORD }} | docker login ${{ vars.JF_URL }} -u ${{ secrets.JF_USER }} --password-stdin
           docker buildx install
           docker buildx create --use --name mybuilder --driver docker-container
-          docker buildx build --platform=linux/amd64,linux/arm64,linux/arm/v7 --tag=${{ vars.JF_URL }}${{ env.DOCKER_REPO }}/${{ env.DOCKER_TAG }} -f=Dockerfile.Fatmanifest --metadata-file=build-metadata --push .
+          docker buildx build --platform=linux/amd64,linux/arm64,linux/arm/v7 --tag=https://soleng.jfrog.io/${{ env.DOCKER_REPO }}/${{ env.DOCKER_TAG }} -f=Dockerfile.Fatmanifest --metadata-file=build-metadata --push .
           jf rt build-docker-create ${{ env.DOCKER_REPO }} --image-file build-metadata
           docker buildx uninstall
 
       - name: Docker Scan
         run: |
-          jf docker pull ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.DOCKER_TAG }}
-          jf docker scan --vuln=true ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.DOCKER_TAG }}
+          jf docker pull https://soleng.jfrog.io/${{ env.DOCKER_REPO }}/${{ env.DOCKER_TAG }}
+          jf docker scan --vuln=true $https://soleng.jfrog.io/${{ env.DOCKER_REPO }}/${{ env.DOCKER_TAG }}
 
       - name: Publish build info
         run: |
