@@ -23,9 +23,6 @@ jobs:
           JF_ACCESS_TOKEN: ${{ secrets.JF_ECO_ACCESS_TOKEN }}
           JFROG_CLI_LOG_LEVEL: DEBUG
           JF_PROJECT: jobsummary
-        with:
-          download-repository: generic-local-eyal
-          version: 2.63.2
 
       - name: Checkout
         uses: actions/checkout@v4
