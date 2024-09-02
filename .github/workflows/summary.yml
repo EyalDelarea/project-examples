@@ -47,6 +47,7 @@ jobs:
         run: |
           cd npm-example
           jf npm-config --repo-resolve=npm-eyalde --repo-deploy=npm-eyalde
+          jf audit
           jf ca
 
       - name: Publish build info
