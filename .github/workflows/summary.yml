@@ -6,9 +6,12 @@ permissions:
   contents: read
 
 env:
-  JFROG_CLI_LOG_LEVEL: DEBUG
   DOCKER_REPO: eyalde-docker-local
-  IMAGE_NAME: multi-arch
+  IMAGE_NAME: swampapp
+  JF_URL: https://${{ vars.JF_URL }}/
+  DOCKER_BUILD_SUMMARY: false
+  DOCKER_BUILD_RECORD_UPLOAD: false
+  JFROG_CLI_LOG_LEVEL: DEBUG
 
 jobs:
   build:
@@ -42,6 +45,9 @@ jobs:
           registry: ${{ vars.JF_URL }}
           username: ${{ secrets.JF_USER }}
           password: ${{ secrets.JF_PASSWORD }}
+
+      - name: Change directory
+        run: cd docker-oci-examples/fat-manifest-example/
 
       - name: Build the Docker image
         uses: docker/build-push-action@v6
