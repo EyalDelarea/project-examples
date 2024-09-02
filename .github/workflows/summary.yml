@@ -22,7 +22,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup JFrog CLI
-        uses: eyaldelarea/setup-jfrog-cli@update_header_image'
+        uses: eyaldelarea/setup-jfrog-cli@update_header_image
         id: setup-cli
         env:
           JF_URL: https://${{ vars.JF_URL }}/
