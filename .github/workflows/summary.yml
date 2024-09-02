@@ -68,12 +68,6 @@ jobs:
           echo "${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}" > metadata.json
           jf rt build-docker-create ${{ env.DOCKER_REPO }} --image-file metadata.json
 
-      - name: Npm build
-        run: |
-          cd npm-example
-          jf npm i
-          jf npm publish
-
       - name: Generic build
         run: |
           cd bash-example
