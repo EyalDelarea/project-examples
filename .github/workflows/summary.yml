@@ -49,7 +49,8 @@ jobs:
         id: build
         with:
           push: true
-          context: docker-oci-examples/fat-manifest-example/Dockerfile.Fatmanifest
+          context: .
+          file: docker-oci-examples/fat-manifest-example/Dockerfile.Fatmanifest
           platforms: linux/amd64,linux/arm64
           tags: ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}
           provenance: false
