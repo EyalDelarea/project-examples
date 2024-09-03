@@ -78,7 +78,7 @@ jobs:
       - name: Npm curation
         run: |
           cd npm-example
-          jf npm install 
+          jf ca
 
       - name: publish build info
         if: always()
