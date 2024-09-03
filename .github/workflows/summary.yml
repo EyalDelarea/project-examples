@@ -90,4 +90,4 @@ jobs:
       - name: build scan
         if : always()
         run: |
-          jf build-scan --vuln --fail=false --watches=Job-Summary
+          jf build-scan --vuln --fail=false
