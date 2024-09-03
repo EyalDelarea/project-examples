@@ -10,6 +10,8 @@ env:
   IMAGE_NAME: swampapp
   JF_URL: https://${{ vars.JF_URL }}/
   JFROG_CLI_LOG_LEVEL: DEBUG
+  DOCKER_BUILD_SUMMARY: false
+  DOCKER_BUILD_RECORD_UPLOAD: false
 
 jobs:
   build:
