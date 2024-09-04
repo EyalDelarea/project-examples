@@ -24,7 +24,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup JFrog CLI
-        uses: eyaldelarea/setup-jfrog-cli@update_header_image
+        uses: eyaldelarea/setup-jfrog-cli@check_min_version
         id: setup-cli
         env:
           JF_URL: https://${{ vars.JF_URL }}/
@@ -70,10 +70,10 @@ jobs:
           echo "${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}" > metadata.json
           jf rt build-docker-create ${{ env.DOCKER_REPO }} --image-file metadata.json
 
-#      - name: Generic build
-#        run: |
-#          cd bash-example
-#          jf rt u ./deploy-file.sh generic-local-eyal/ --module=generic-module
+      - name: Generic build
+        run: |
+          cd bash-example
+          jf rt u ./deploy-file.sh generic-local-eyal/ --module=generic-module
 
       - name: Npm curation
         run: |
@@ -81,13 +81,11 @@ jobs:
           jf npm install
 
       - name: publish build info
-        if: always()
         run: |
           jf rt build-collect-env
           jf rt build-add-git
           jf rt build-publish
 
       - name: build scan
-        if : always()
         run: |
           jf build-scan --vuln --fail=false
