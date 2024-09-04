@@ -81,6 +81,7 @@ jobs:
           jf npm install
 
       - name: publish build info
+        if : always()
         run: |
           jf rt build-collect-env
           jf rt build-add-git
