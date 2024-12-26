@@ -6,7 +6,7 @@ permissions:
   contents: read
 
 env:
-  DOCKER_REPO: eyalde-docker-local
+  DOCKER_REPO: summary-docker-local
   IMAGE_NAME: swampapp
   JF_URL: https://${{ vars.JF_URL }}/
   JFROG_CLI_LOG_LEVEL: DEBUG
@@ -36,7 +36,7 @@ jobs:
 #          version: 2.67.0
 
       - name: Set CLI Config
-        run: jf npm-config --global=true --repo-resolve=npm-eyalde --repo-deploy=npm-eyalde
+        run: jf npm-config --global=true --repo-resolve=npm-summary --repo-deploy=npm-summary
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
