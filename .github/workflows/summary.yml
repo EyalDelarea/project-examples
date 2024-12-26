@@ -24,7 +24,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup JFrog CLI
-        uses: jfrog/setup-jfrog-cli@v4
+        uses: EyalDelarea/setup-jfrog-cli@fix_footer_space
         id: setup-cli
         env:
           JF_URL: https://${{ vars.JF_URL }}/
@@ -32,9 +32,6 @@ jobs:
           JF_GIT_TOKEN: ${{ secrets.JF_GIT_TOKEN }}
           JFROG_CLI_LOG_LEVEL: DEBUG
           JF_PROJECT: jobsummary
-        with:
-          download-repository: generic-local-eyal
-          version: 2.72.4
 
       - name: rt ping
         run: jf rt ping
@@ -81,12 +78,12 @@ jobs:
 #          cd npm-example
 #          jf npm install
 
-      - name: publish build info
-        if : always()
-        run: |
-          jf rt build-collect-env
-          jf rt build-add-git
-          jf rt build-publish
+#      - name: publish build info
+#        if : always()
+#        run: |
+#          jf rt build-collect-env
+#          jf rt build-add-git
+#          jf rt build-publish
 #
 #      - name: build scan
 #        if : always()
