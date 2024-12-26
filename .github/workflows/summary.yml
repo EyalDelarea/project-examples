@@ -66,15 +66,15 @@ jobs:
           jf docker pull ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}
           jf docker scan ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}:latest --vuln --project=${{ vars.JF_PROJECT }} --fail=false
 
-      - name: add docker package to build
-        run: |
-          echo "${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}" > metadata.json
-          jf rt build-docker-create ${{ env.DOCKER_REPO }} --image-file metadata.json
+#      - name: add docker package to build
+#        run: |
+#          echo "${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}" > metadata.json
+#          jf rt build-docker-create ${{ env.DOCKER_REPO }} --image-file metadata.json
 
-      - name: Generic build
-        run: |
-          cd bash-example
-          jf rt u ./deploy-file.sh generic-local-eyal/ --module=generic-module
+#      - name: Generic build
+#        run: |
+#          cd bash-example
+#          jf rt u ./deploy-file.sh generic-local-eyal/ --module=generic-module
 
 #      - name: Npm curation
 #        run: |
