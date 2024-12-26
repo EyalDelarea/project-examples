@@ -49,16 +49,16 @@ jobs:
           username: ${{ secrets.JF_USER }}
           password: ${{ secrets.JF_PASSWORD }}
 
-      - name: Build the Docker image
-        uses: docker/build-push-action@v6
-        id: build
-        with:
-          push: true
-          context: .
-          file: docker-oci-examples/fat-manifest-example/Dockerfile.Fatmanifest
-          platforms: linux/amd64,linux/arm64
-          tags: ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}
-          provenance: false
+#      - name: Build the Docker image
+#        uses: docker/build-push-action@v6
+#        id: build
+#        with:
+#          push: true
+#          context: .
+#          file: docker-oci-examples/fat-manifest-example/Dockerfile.Fatmanifest
+#          platforms: linux/amd64,linux/arm64
+#          tags: ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}
+#          provenance: false
 
       - name: docker scan
 
@@ -87,8 +87,8 @@ jobs:
           jf rt build-collect-env
           jf rt build-add-git
           jf rt build-publish
-
-      - name: build scan
-        if : always()
-        run: |
-          jf build-scan --vuln --fail=false
+#
+#      - name: build scan
+#        if : always()
+#        run: |
+#          jf build-scan --vuln --fail=false
