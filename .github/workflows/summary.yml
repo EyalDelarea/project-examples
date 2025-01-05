@@ -74,6 +74,10 @@ jobs:
           cd bash-example
           jf rt u ./deploy-file.sh generic-local-eyal/ --module=generic-module
 
+      - name: Echo GITHUB_JOB_ID
+        run: |
+          echo "GITHUB_JOB_ID: $GITHUB_JOB"
+
 #      - name: Npm curation
 #        run: |
 #          cd npm-example
