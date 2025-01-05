@@ -1,4 +1,4 @@
-name: "Job Summaries with spaces"
+name: "Job Summaries with spaces & * % $"
 on: push
 
 permissions:
