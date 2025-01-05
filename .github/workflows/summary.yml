@@ -24,7 +24,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup JFrog CLI
-        uses: EyalDelarea/setup-jfrog-cli@add_query_params
+        uses: EyalDelarea/setup-jfrog-cli@fix_job_id_mismatch
         id: setup-cli
         env:
           JF_URL: https://${{ vars.JF_URL }}/
