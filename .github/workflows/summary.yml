@@ -28,12 +28,11 @@ jobs:
         id: setup-cli
         env:
           JF_URL: https://${{ vars.JF_URL }}/
-          JF_USER: ${{ secrets.JF_USER }}
-          JF_PASSWORD: ${{ secrets.JF_PASSWORD }}
           JF_GIT_TOKEN: ${{ secrets.JF_GIT_TOKEN }}
           JFROG_CLI_LOG_LEVEL: DEBUG
           JF_PROJECT: jobsummary
         with:
+          oidc-provider-name: githubtest
           download-repository: generic-local-eyal
 
       - name: rt ping
