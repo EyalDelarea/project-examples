@@ -24,56 +24,53 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup JFrog CLI
-        uses: EyalDelarea/setup-jfrog-cli@fix_job_id_mismatch
+        uses: EyalDelarea/setup-jfrog-cli@promote_4_5_6
         id: setup-cli
         env:
           JF_URL: https://${{ vars.JF_URL }}/
           JF_GIT_TOKEN: ${{ secrets.JF_GIT_TOKEN }}
           JFROG_CLI_LOG_LEVEL: DEBUG
           JF_PROJECT: jobsummary
-        with:
-          oidc-provider-name: githubtest
-          download-repository: generic-local-eyal
 
       - name: rt ping
         run: jf rt ping
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Authenticate Docker
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ vars.JF_URL }}
-          username: ${{ secrets.JF_USER }}
-          password: ${{ secrets.JF_PASSWORD }}
-
-      - name: Build the Docker image
-        uses: docker/build-push-action@v6
-        id: build
-        with:
-          push: true
-          context: .
-          file: docker-oci-examples/fat-manifest-example/Dockerfile.Fatmanifest
-          platforms: linux/amd64,linux/arm64
-          tags: ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}
-          provenance: false
-
-      - name: docker scan
-
-        run: |
-          jf docker pull ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}
-          jf docker scan ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}:latest --vuln --project=${{ vars.JF_PROJECT }} --fail=false
-
-      - name: add docker package to build
-        run: |
-          echo "${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}" > metadata.json
-          jf rt build-docker-create ${{ env.DOCKER_REPO }} --image-file metadata.json
-
-      - name: Generic build
-        run: |
-          cd bash-example
-          jf rt u ./deploy-file.sh generic-local-eyal/ --module=generic-module
+#      - name: Set up Docker Buildx
+#        uses: docker/setup-buildx-action@v3
+#
+#      - name: Authenticate Docker
+#        uses: docker/login-action@v3
+#        with:
+#          registry: ${{ vars.JF_URL }}
+#          username: ${{ secrets.JF_USER }}
+#          password: ${{ secrets.JF_PASSWORD }}
+#
+#      - name: Build the Docker image
+#        uses: docker/build-push-action@v6
+#        id: build
+#        with:
+#          push: true
+#          context: .
+#          file: docker-oci-examples/fat-manifest-example/Dockerfile.Fatmanifest
+#          platforms: linux/amd64,linux/arm64
+#          tags: ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}
+#          provenance: false
+#
+#      - name: docker scan
+#
+#        run: |
+#          jf docker pull ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}
+#          jf docker scan ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}:latest --vuln --project=${{ vars.JF_PROJECT }} --fail=false
+#
+#      - name: add docker package to build
+#        run: |
+#          echo "${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}" > metadata.json
+#          jf rt build-docker-create ${{ env.DOCKER_REPO }} --image-file metadata.json
+#
+#      - name: Generic build
+#        run: |
+#          cd bash-example
+#          jf rt u ./deploy-file.sh generic-local-eyal/ --module=generic-module
 
 #      - name: Npm curation
 #        run: |
